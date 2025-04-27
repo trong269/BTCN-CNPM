@@ -8,26 +8,43 @@ from datetime import date, timedelta
 def get_dsdon_xin_nghi_by_nhanvien_id(db: Session, nhanvien_id: int) -> List[schemas.DonXinNghiPresent]:
     """
     Lấy tất cả các đơn xin nghỉ phép của nhân viên có id = nhanvien_id.
-    Chỉ trả về các trường ngaytao, lydo, và trangthai.
+    Chỉ trả về các trường ngaytao, lydo, trangthai, ngaylam, và tenca.
 
     Args:
         db (Session): Phiên làm việc với cơ sở dữ liệu.
         nhanvien_id (int): ID của nhân viên.
 
     Returns:
-        List[DonXinNghi]: Danh sách các đơn xin nghỉ phép với các trường ngaytao, lydo, và trangthai.
+        List[DonXinNghiPresent]: Danh sách các đơn xin nghỉ phép với các trường ngaytao, lydo, trangthai, ngaylam, và tenca.
     """
     # Truy vấn chỉ lấy các trường cần thiết
     don_xin_nghi_list = db.query(
         models.DonXinNghi.ngaytao,
         models.DonXinNghi.lydo,
-        models.DonXinNghi.trangthai
+        models.DonXinNghi.trangthai,
+        models.LichLam.ngaylam,
+        models.CaLam.tenca
+    ).join(
+        models.LichLam, models.DonXinNghi.LichLamid == models.LichLam.id
+    ).join(
+        models.CaLam, models.LichLam.CaLamid == models.CaLam.id
     ).filter(
         models.DonXinNghi.NhanVienid == nhanvien_id
-    ).order_by( models.DonXinNghi.ngaytao.desc()).all()
+    ).order_by(
+        models.DonXinNghi.ngaytao.desc()
+    ).all()
 
-    # Chuyển đổi kết quả truy vấn thành danh sách schema DonXinNghi
-    return [schemas.DonXinNghiPresent(ngaytao=don.ngaytao, lydo=don.lydo, trangthai= don.trangthai) for don in don_xin_nghi_list]
+    # Chuyển đổi kết quả truy vấn thành danh sách schema DonXinNghiPresent
+    return [
+        schemas.DonXinNghiPresent(
+            ngaytao=don.ngaytao,
+            ngayxinnghi=don.ngaylam,
+            caxinnghi=don.tenca,
+            lydo=don.lydo,
+            trangthai=don.trangthai
+        )
+        for don in don_xin_nghi_list
+    ]
 
 def check_don_xin_nghi_by_nhanvien_id_and_lich_lam_id(db: Session, nhanvien_id: int, lichlam_id: int) -> bool:
     """

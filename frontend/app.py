@@ -48,10 +48,10 @@ def render_list_requests_view():
         st.info("Chưa có đơn xin nghỉ nào được tạo.")
     else:
         df_display = df_don_nghi.copy()
-        if 'NgayTao' in df_display.columns:
+        if 'ngày tạo' in df_display.columns:
             try:
-                df_display['NgayTao'] = pd.to_datetime(df_display['NgayTao'])
-                df_display['NgayTao'] = df_display['NgayTao'].dt.strftime('%d/%m/%Y')
+                df_display['ngày tạo'] = pd.to_datetime(df_display['ngày tạo']).dt.strftime('%d/%m/%Y')
+                df_display['ngày xin nghỉ'] = pd.to_datetime(df_display['ngày xin nghỉ']).dt.strftime('%d/%m/%Y')
             except Exception as e:
                 st.warning(f"Không thể định dạng ngày: {e}")
 
@@ -116,7 +116,7 @@ def render_create_form_view():
 
                 if result.get("success"):
                     st.success(result.get("message", "Gửi đơn thành công!"))
-                    st.balloons()
+                    # st.balloons()
                     st.session_state.current_view = 'list_requests'
                     import time
                     time.sleep(2)

@@ -68,9 +68,11 @@ class DonXinNghiCreate(DonXinNghiBase):
 
 class DonXinNghiPresent(BaseModel):
     ngaytao: date
+    ngayxinnghi: date
+    caxinnghi: str
     lydo: str
     trangthai: str
-
+    
 class DonXinNghi(DonXinNghiBase):
     id: int
 

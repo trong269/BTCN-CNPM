@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Float, Date, Time
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Date, Time, Text
 from sqlalchemy.orm import relationship
 from backend.database import Base
 
@@ -15,7 +15,6 @@ class NhanVien(Base):
     # Relationships
     lich_lams = relationship("LichLam", back_populates="nhan_vien")
     don_xin_nghis = relationship("DonXinNghi", back_populates="nhan_vien")
-
 class CaLam(Base):
     __tablename__ = "CaLam"
 
@@ -46,7 +45,7 @@ class DonXinNghi(Base):
     __tablename__ = "DonXinNghi"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    lydo = Column(String(255), nullable=False)
+    lydo = Column(Text, nullable=False)
     trangthai = Column(String(255), nullable=False)
     ngaytao = Column(Date, nullable=False)
     NhanVienid = Column(Integer, ForeignKey("NhanVien.id"))
