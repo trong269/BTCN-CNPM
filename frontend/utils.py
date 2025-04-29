@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import date
 
 # Địa chỉ gốc của FastAPI backend (thay đổi nếu cần)
-BACKEND_URL = "http://127.0.0.1:8000"
+BACKEND_URL = "http://127.0.0.1:8001"
 
 # ----- Hàm gọi API thực tế -----
 
@@ -38,7 +38,7 @@ def get_danh_sach_don_api(nhanvien_id: int):
                 "Ngày xin nghỉ": item.get("ngayxinnghi"),
                 "Ca xin nghỉ": item.get("caxinnghi"),
                 "Lý do": item.get("lydo"),
-                "Trạng thái": "Đã duyệt" if item.get("trangthai") else "Chưa duyệt"
+                "Trạng thái": item.get("trangthai", "đang chờ")  # Mặc định trạng thái là "Chưa duyệt"
             })
 
         # Tạo DataFrame từ danh sách đã xử lý
